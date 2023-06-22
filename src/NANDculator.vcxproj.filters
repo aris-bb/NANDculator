@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="NANDculator.cpp" />
+    <ClCompile Include="logic\nand.cpp">
+      <Filter>logic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="arithmetic">
+      <UniqueIdentifier>{2fa74615-7e7e-4240-a3ec-8a016ca836c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic">
+      <UniqueIdentifier>{c53a6c7a-86ed-4741-beb8-59f778cb47cc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="logic\bitwise.hpp">
+      <Filter>logic</Filter>
+    </ClInclude>
+    <ClInclude Include="logic\nand.hpp">
+      <Filter>logic</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

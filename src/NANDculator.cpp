@@ -5,28 +5,14 @@
 #include "arithmetic/arithmetic.hpp"
 #include "helper.hpp"
 
-#define RUN_TESTS 1
+#define RUN_TESTS 0
 
 #if RUN_TESTS
 #include "NANDculator.tests.hpp"
 #endif
 
-std::vector<std::string> split(std::string str, char delimiter) {
-  std::vector<std::string> result;
-  std::string temp = "";
-  for (int i = 0; i < str.length(); i++) {
-    if (str[i] == delimiter) {
-      result.push_back(temp);
-      temp = "";
-    } else {
-      temp += str[i];
-    }
-  }
-  result.push_back(temp);
-  return result;
-}
-
 int main() {
+
 #if RUN_TESTS
   nandculator::tests::run();
 #endif
@@ -41,31 +27,40 @@ int main() {
   std::cout << "Supported operators: +, -, *, /" << std::endl;
 
   std::string input;
-  std::vector<std::string> input_array;
   while (true) {
     std::cout << "Enter an expression: ";
     std::getline(std::cin, input);
-    input_array = split(input, ' ');
-    if (input_array.size() != 3) {
+
+    // get rid of spaces
+    input.erase(std::remove_if(input.begin(), input.end(), isspace),
+                input.end());
+
+    // parse the input
+    int64_t a = 0, b = 0;
+    std::string op;
+    try {
+      const auto& [a_str, op_str, b_str] =
+          nandculator::helper::split_by_operator(input);
+
+      op = op_str;
+
+      try {
+        a = std::stoll(a_str);
+      } catch (std::out_of_range&) {
+        std::cout << "The first input value is out of range. Please try again."
+                  << std::endl;
+        continue;
+      }
+
+      try {
+        b = std::stoll(b_str);
+      } catch (std::out_of_range&) {
+        std::cout << "The second input value is out of range. Please try again."
+                  << std::endl;
+        continue;
+      }
+    } catch (const std::exception&) {
       std::cout << "Invalid input. Please try again." << std::endl;
-      continue;
-    }
-
-    int64_t a = 0;
-    try {
-      a = std::stoll(input_array[0]);
-    } catch (std::out_of_range&) {
-      std::cout << "The first input value is out of range. Please try again."
-                << std::endl;
-      continue;
-    }
-
-    int64_t b = 0;
-    try {
-      b = std::stoll(input_array[2]);
-    } catch (std::out_of_range&) {
-      std::cout << "The second input value is out of range. Please try again."
-                << std::endl;
       continue;
     }
 
@@ -73,7 +68,6 @@ int main() {
     auto bv_a = nandculator::helper::to_bv(a);
     auto bv_b = nandculator::helper::to_bv(b);
 
-    std::string op = input_array[1];
     std::vector<bool> bv_result;
     if (op == "+") {
       bv_result = nandculator::arithmetic::bv_add(bv_a, bv_b);
@@ -82,7 +76,10 @@ int main() {
     } else if (op == "*") {
       bv_result = nandculator::arithmetic::bv_mul(bv_a, bv_b);
     } else if (op == "/") {
-      // check div by 0 here
+      if (b == 0) {
+        std::cout << "Cannot divide by zero. Please try again." << std::endl;
+        continue;
+      }
       bv_result = nandculator::arithmetic::bv_div(bv_a, bv_b);
     } else {
       std::cout << "Invalid operator. Please try again." << std::endl;

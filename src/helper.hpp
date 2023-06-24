@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <string>
 #include <vector>
 
 namespace nandculator::helper {
@@ -33,5 +34,8 @@ T from_bv(const std::vector<bool>& bv) {
   }
   return result;
 }
+
+std::tuple<std::string, std::string, std::string> split_by_operator(
+    const std::string& expression);
 
 }  // namespace nandculator::helper

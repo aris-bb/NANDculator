@@ -120,4 +120,17 @@ void nandculator::tests::run() {
   assert(from_bv<int64_t>(bv_div(to_bv(-12345678i64), to_bv(12345678i64))) == -1);
   assert(from_bv<int64_t>(bv_div(to_bv(-12345678i64), to_bv(-12345678i64))) == 1);
   assert(from_bv<int64_t>(bv_div(to_bv(0x8000i64), to_bv(-0x8000i64))) == -1);
+
+  // unit tests with asserts for split_by_operator
+  assert(split_by_operator("2+2") == std::make_tuple("2", "+", "2"));
+  assert(split_by_operator("2-2") == std::make_tuple("2", "-", "2"));
+  assert(split_by_operator("2*2") == std::make_tuple("2", "*", "2"));
+  assert(split_by_operator("2/2") == std::make_tuple("2", "/", "2"));
+  assert(split_by_operator("2+-2") == std::make_tuple("2", "+", "-2"));
+  assert(split_by_operator("2--2") == std::make_tuple("2", "-", "-2"));
+  assert(split_by_operator("-2-2") == std::make_tuple("-2", "-", "2"));
+  assert(split_by_operator("-2+2") == std::make_tuple("-2", "+", "2"));
+  assert(split_by_operator("+2++2") == std::make_tuple("+2", "+", "+2"));
+  assert(split_by_operator("-2+-2") == std::make_tuple("-2", "+", "-2"));
+  assert(split_by_operator("-2--2") == std::make_tuple("-2", "-", "-2"));
 }

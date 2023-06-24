@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="arithmetic\arithmetic.cpp" />
+    <ClCompile Include="helper.cpp" />
     <ClCompile Include="logic\bitvector.cpp" />
     <ClCompile Include="logic\boolean.cpp" />
     <ClCompile Include="NANDculator.cpp" />

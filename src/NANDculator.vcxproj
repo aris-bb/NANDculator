@@ -78,6 +78,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,6 +95,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,6 +112,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +129,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,12 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="logic\nand.cpp" />
+    <ClCompile Include="arithmetic\arithmetic.cpp" />
+    <ClCompile Include="logic\bitvector.cpp" />
+    <ClCompile Include="logic\boolean.cpp" />
     <ClCompile Include="NANDculator.cpp" />
+    <ClCompile Include="NANDculator.tests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="logic\bitwise.hpp" />
-    <ClInclude Include="logic\nand.hpp" />
+    <ClInclude Include="arithmetic\arithmetic.hpp" />
+    <ClInclude Include="helper.hpp" />
+    <ClInclude Include="logic\bitvector.hpp" />
+    <ClInclude Include="logic\boolean.hpp" />
+    <ClInclude Include="NANDculator.tests.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

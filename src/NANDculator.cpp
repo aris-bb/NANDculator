@@ -1,111 +1,96 @@
-#include <cassert>
 #include <iostream>
+#include <string>
 #include <vector>
 
-#include "logic/nand.hpp"
+#include "arithmetic/arithmetic.hpp"
+#include "helper.hpp"
 
-template <typename T>
-std::vector<bool> to_bv(T value) {
-  std::vector<bool> bv;
-  // iterate over the bits of value
-  const size_t bits = sizeof(T) * 8;
-  for (int i = 0; i < bits; i++) {
-    // check if the ith bit is set
-    bv.push_back(value & (1 << i));
-  }
-  return bv;
-}
+#define RUN_TESTS 1
 
-template <typename T>
-T from_bv(const std::vector<bool>& bv) {
-  T result = 0;
-  // iterate over either the size of bv, or the bit count of type T, whichever
-  // is smaller
-  const size_t bits = std::min(bv.size(), sizeof(T) * 8);
-  for (int i = 0; i < bits; i++) {
-    if (bv[i]) {
-      result |= (1 << i);
+#if RUN_TESTS
+#include "NANDculator.tests.hpp"
+#endif
+
+std::vector<std::string> split(std::string str, char delimiter) {
+  std::vector<std::string> result;
+  std::string temp = "";
+  for (int i = 0; i < str.length(); i++) {
+    if (str[i] == delimiter) {
+      result.push_back(temp);
+      temp = "";
+    } else {
+      temp += str[i];
     }
   }
+  result.push_back(temp);
   return result;
 }
 
 int main() {
-  int a = 0b1010;
+#if RUN_TESTS
+  nandculator::tests::run();
+#endif
 
-  // convert the integer a to a bitvector of size 4
-  auto bv = to_bv(a);
+  std::cout << "Welcome to NANDculator, a calculator that is built using only "
+               "NAND gates!"
+            << std::endl;
 
-  auto out = nandculator::logic::bvadd(to_bv(5), to_bv(-5));
+  std::cout << "Enter two numbers and an operator to calculate. (ex. 2 + 2) "
+            << std::endl;
 
-  auto b = from_bv<int>(out);
+  std::cout << "Supported operators: +, -, *, /" << std::endl;
 
-  // auto b = from_bv<int>(bv);
+  std::string input;
+  std::vector<std::string> input_array;
+  while (true) {
+    std::cout << "Enter an expression: ";
+    std::getline(std::cin, input);
+    input_array = split(input, ' ');
+    if (input_array.size() != 3) {
+      std::cout << "Invalid input. Please try again." << std::endl;
+      continue;
+    }
 
-  // unit tests with asserts for bvadd
-  assert(from_bv<int>(nandculator::logic::bvadd(to_bv(5), to_bv(0))) == 5);
-  assert(from_bv<int>(nandculator::logic::bvadd(to_bv(0), to_bv(5))) == 5);
-  assert(from_bv<int>(nandculator::logic::bvadd(to_bv(5), to_bv(5))) == 10);
-  assert(from_bv<int>(nandculator::logic::bvadd(to_bv(5), to_bv(-5))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvadd(to_bv(-5), to_bv(5))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvadd(to_bv(-5), to_bv(-5))) == -10);
-  assert(from_bv<int>(nandculator::logic::bvadd(to_bv(-5), to_bv(0))) == -5);
-  assert(from_bv<int>(nandculator::logic::bvadd(to_bv(0), to_bv(-5))) == -5);
+    int64_t a = 0;
+    try {
+      a = std::stoll(input_array[0]);
+    } catch (std::out_of_range&) {
+      std::cout << "The first input value is out of range. Please try again."
+                << std::endl;
+      continue;
+    }
 
-  // unit tests with asserts for bvsub
-  assert(from_bv<int>(nandculator::logic::bvsub(to_bv(5), to_bv(0))) == 5);
-  assert(from_bv<int>(nandculator::logic::bvsub(to_bv(0), to_bv(5))) == -5);
-  assert(from_bv<int>(nandculator::logic::bvsub(to_bv(5), to_bv(5))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvsub(to_bv(5), to_bv(-5))) == 10);
-  assert(from_bv<int>(nandculator::logic::bvsub(to_bv(-5), to_bv(5))) == -10);
-  assert(from_bv<int>(nandculator::logic::bvsub(to_bv(-5), to_bv(-5))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvsub(to_bv(-5), to_bv(0))) == -5);
-  assert(from_bv<int>(nandculator::logic::bvsub(to_bv(0), to_bv(-5))) == 5);
+    int64_t b = 0;
+    try {
+      b = std::stoll(input_array[2]);
+    } catch (std::out_of_range&) {
+      std::cout << "The second input value is out of range. Please try again."
+                << std::endl;
+      continue;
+    }
 
-  // unit tests with asserts for bvmul
-  assert(from_bv<int>(nandculator::logic::bvmul(to_bv(5), to_bv(0))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvmul(to_bv(0), to_bv(5))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvmul(to_bv(5), to_bv(5))) == 25);
-  assert(from_bv<int>(nandculator::logic::bvmul(to_bv(5), to_bv(-5))) == -25);
-  assert(from_bv<int>(nandculator::logic::bvmul(to_bv(-5), to_bv(5))) == -25);
-  assert(from_bv<int>(nandculator::logic::bvmul(to_bv(-5), to_bv(-5))) == 25);
-  assert(from_bv<int>(nandculator::logic::bvmul(to_bv(-5), to_bv(0))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvmul(to_bv(0), to_bv(-5))) == 0);
+    // convert to bitvector
+    auto bv_a = nandculator::helper::to_bv(a);
+    auto bv_b = nandculator::helper::to_bv(b);
 
-  // unit tests with asserts for bvdiv
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(5), to_bv(1))) == 5);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(5), to_bv(5))) == 1);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(5), to_bv(-5))) == -1);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(-5), to_bv(5))) == -1);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(-5), to_bv(-5))) == 1);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(-5), to_bv(1))) == -5);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(1), to_bv(-5))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(0), to_bv(-5))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(0), to_bv(5))) == 0);
-  assert(from_bv<int>(nandculator::logic::bvdiv(to_bv(0), to_bv(1))) == 0);
+    std::string op = input_array[1];
+    std::vector<bool> bv_result;
+    if (op == "+") {
+      bv_result = nandculator::arithmetic::bv_add(bv_a, bv_b);
+    } else if (op == "-") {
+      bv_result = nandculator::arithmetic::bv_sub(bv_a, bv_b);
+    } else if (op == "*") {
+      bv_result = nandculator::arithmetic::bv_mul(bv_a, bv_b);
+    } else if (op == "/") {
+      // check div by 0 here
+      bv_result = nandculator::arithmetic::bv_div(bv_a, bv_b);
+    } else {
+      std::cout << "Invalid operator. Please try again." << std::endl;
+      continue;
+    }
 
-  try {
-    volatile auto result =
-        from_bv<int>(nandculator::logic::bvdiv(to_bv(1), to_bv(0)));
-    assert(false);
-  } catch (const std::exception& e) {
-    assert(true);
-  }
-
-  try {
-    volatile auto result =
-        from_bv<int>(nandculator::logic::bvdiv(to_bv(5), to_bv(0)));
-    assert(false);
-  } catch (const std::exception& e) {
-    assert(true);
-  }
-
-  try {
-    volatile auto result =
-        from_bv<int>(nandculator::logic::bvdiv(to_bv(-5), to_bv(0)));
-    assert(false);
-  } catch (const std::exception& e) {
-    assert(true);
+    std::cout << "Result: " << nandculator::helper::from_bv<int64_t>(bv_result)
+              << std::endl;
   }
 
   return 0;

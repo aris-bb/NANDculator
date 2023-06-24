@@ -2,8 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="NANDculator.cpp" />
-    <ClCompile Include="logic\nand.cpp">
+    <ClCompile Include="NANDculator.tests.cpp" />
+    <ClCompile Include="logic\bitvector.cpp">
       <Filter>logic</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\boolean.cpp">
+      <Filter>logic</Filter>
+    </ClCompile>
+    <ClCompile Include="arithmetic\arithmetic.cpp">
+      <Filter>arithmetic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -15,11 +22,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="logic\bitwise.hpp">
+    <ClInclude Include="NANDculator.tests.hpp" />
+    <ClInclude Include="logic\boolean.hpp">
       <Filter>logic</Filter>
     </ClInclude>
-    <ClInclude Include="logic\nand.hpp">
+    <ClInclude Include="logic\bitvector.hpp">
       <Filter>logic</Filter>
     </ClInclude>
+    <ClInclude Include="arithmetic\arithmetic.hpp">
+      <Filter>arithmetic</Filter>
+    </ClInclude>
+    <ClInclude Include="helper.hpp" />
   </ItemGroup>
 </Project>
